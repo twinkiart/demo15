@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
+import java.util.List;
 
 public class MainPageTest {
     private WebDriver driver;
@@ -33,15 +34,24 @@ public class MainPageTest {
     }
 
     @Test
-    public void search() {
-        String input = "Tesla";
-        WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q"));
-        searchField.sendKeys(input);
-        searchField.submit();
+    public void searchForSelenium() {
+        String input = "Selenium";
+        WebElement searchFeald = driver.findElement(By.cssSelector("#sb_form_q"));
+        searchFeald.sendKeys(input);
+        searchFeald.submit();
 
+        List<WebElement> searchResults = driver.findElements(By.cssSelector("h2 > a[href]"));
+        assertTrue(searchResults.size() > 0, "Результаты поиска не найдены.");
 
-        WebElement searchPageField = driver.findElement(By.cssSelector("#sb_form_q"));
-        assertEquals(input, searchPageField.getAttribute("value"));
+        WebElement firstResult = searchResults.get(1);
+        clickElement(firstResult);
+
+        String currentUrl = driver.getCurrentUrl();
+        assertEquals("https://www.selenium.dev/", currentUrl);
     }
 
+    public void clickElement(WebElement element) {
+        System.out.println("Клик по элементу: " + element.getText());
+        element.click();
+    }
 }
